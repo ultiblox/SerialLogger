@@ -14,7 +14,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Install Arduino CLI
       run: |
@@ -30,20 +30,12 @@ jobs:
       run: |
         bash version-increment.sh
 
-    - name: Set git author based on last commit
+    - name: Configure Git
       run: |
-        COMMIT_AUTHOR_NAME=$(git log -1 --pretty=format:'%an')
-        COMMIT_AUTHOR_EMAIL=$(git log -1 --pretty=format:'%ae')
-        git config --local user.name "$COMMIT_AUTHOR_NAME"
-        git config --local user.email "$COMMIT_AUTHOR_EMAIL"
+        git config --global user.name "${{ github.actor }}"
+        git config --global user.email "${{ github.actor }}@users.noreply.github.com"
 
-    - name: Commit and push new version
-      run: |
-        git add VERSION
-        git commit -m "ci: bump version"
-        git push origin main
-
-    - name: Create and push tag
+    - name: Create and push new tag
       run: |
         new_version=$(cat VERSION)
         git tag "v${new_version}"
