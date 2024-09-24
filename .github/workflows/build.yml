@@ -1,5 +1,8 @@
 name: Arduino Library CI
 
+permissions:
+  contents: write-all
+  
 on:
   push:
     branches:
