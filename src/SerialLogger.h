@@ -33,6 +33,10 @@ public:
         Serial.begin(baudRate);
         while (!Serial) { ; }  // Wait for Serial to be ready
     }
+    
+    void begin(long baudRate = 115200){
+    	init(baudRate);
+    }
 
     // Debug logging (only if log level is DEBUG)
     template<typename T>
