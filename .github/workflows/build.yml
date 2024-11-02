@@ -23,6 +23,16 @@ jobs:
         arduino-cli core update-index
         arduino-cli core install arduino:avr
 
+    - name: Run Version Increment Script
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # Run the version increment script
+        bash version-increment.sh
+
+        # Push the commit and tag back to GitHub
+        git push origin main --tags
+
     - name: Run build script
       run: |
         bash build.sh
