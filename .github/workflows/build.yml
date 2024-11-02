@@ -31,6 +31,10 @@ jobs:
         arduino-cli core update-index
         arduino-cli core install arduino:avr
 
+    - name: Run build script
+      run: |
+        bash build.sh
+
     - name: Run Version Increment Script
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -41,7 +45,3 @@ jobs:
         # Use HTTPS with token for authenticated push
         git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
         git push origin main --tags
-
-    - name: Run build script
-      run: |
-        bash build.sh
