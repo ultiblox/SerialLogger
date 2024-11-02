@@ -1,5 +1,8 @@
 name: Arduino Library Release
 
+permissions:
+  contents: write  # Grants write permissions for contents (needed to create releases)
+
 on:
   push:
     tags:
