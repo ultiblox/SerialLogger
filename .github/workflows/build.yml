@@ -13,6 +13,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Set Up Git User as Committer
+      run: |
+        git config --global user.name "${{ github.actor }}"
+        git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
     - name: Install Arduino CLI
       run: |
         curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
@@ -30,7 +35,8 @@ jobs:
         # Run the version increment script
         bash version-increment.sh
 
-        # Push the commit and tag back to GitHub
+        # Use HTTPS with token for authenticated push
+        git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
         git push origin main --tags
 
     - name: Run build script
