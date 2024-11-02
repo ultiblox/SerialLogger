@@ -1,15 +1,15 @@
-name: Arduino Library CI
-
-permissions:
-  contents: write  # Grants write permissions for contents (needed to create releases)
+name: Build, Version, and Release
 
 on:
   push:
     branches:
-      - main  # Runs on main branch pushes only
+      - main  # Trigger on pushes to main
+
+permissions:
+  contents: write  # Needed to push tags and create releases
 
 jobs:
-  build:
+  build-and-release:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,17 +31,30 @@ jobs:
         arduino-cli core update-index
         arduino-cli core install arduino:avr
 
-    - name: Run build script
+    - name: Run Build Script
       run: |
         bash build.sh
 
-    - name: Run Version Increment Script
+    - name: Run Version Increment Script (Only if Build Succeeds)
+      if: ${{ success() }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        # Run the version increment script
+        # Increment version, commit, and push tag
         bash version-increment.sh
 
-        # Use HTTPS with token for authenticated push
-        git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
-        git push origin main --tags
+    - name: Create GitHub Release
+      if: ${{ success() }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        version=$(grep -oP 'version=\K.*' library.properties)
+        release_name="Release v$version"
+        release_body="Automatic release for version v$version"
+        
+        # Create a release on GitHub
+        curl -X POST \
+          -H "Authorization: token $GITHUB_TOKEN" \
+          -H "Content-Type: application/json" \
+          -d "{\"tag_name\":\"v$version\",\"name\":\"$release_name\",\"body\":\"$release_body\",\"draft\":false,\"prerelease\":false}" \
+          https://api.github.com/repos/${{ github.repository }}/releases
