@@ -112,6 +112,6 @@ Logger.println("This is directly printed to Serial.");
 
 - **Note**: These calls are **not disableable**. For logs you want to control with log levels, use `info` or `debug`.
 
-## License
 
-This library is open source, distributed under the MIT License.
+## License
+[This project is licensed under the UltiBlox License.](https://ultiblox.org/license)
