@@ -1,117 +1,94 @@
 # SerialLogger Library
 
+[UltiBlox on GitHub](https://github.com/UltiBlox/SerialLogger) | [UltiBlox Home](https://ultiblox.org)
+
 ## Overview
 
-The `SerialLogger` library provides a lightweight, configurable logging system for Arduino projects. It supports different log levels, flexible output formats, and simple direct printing to the serial port.
+`SerialLogger` is an open-source Arduino library for structured data logging and debugging. It supports multiple log levels and output formats, making it easy to log information from your Arduino and integrate with external systems.
 
-### Key Features:
+Core features:
+- Configurable log levels: `DEBUG`, `INFO`, `DATA`.
+- Flexible output formats: human-readable or machine-readable.
+- Simple integration with tools like Python for data parsing.
 
-- **Log levels**: `DEBUG`, `INFO`, and `DATA`, allowing you to control the verbosity of logs.
-- **Log formats**: Human-readable or machine-readable, ideal for structured logging.
-- **Direct printing**: Use `print` and `println` for direct output to `Serial` that is always enabled.
+---
 
-## Installation
+## Quick Start
 
-### Standard Installation
+### Cloning the Repository
+To clone the library, run:
+```bash
+git clone git@github.com:UltiBlox/SerialLogger.git
+cd SerialLogger
+```
 
-To install the library, run:
-
+### Installation
+Run the installation script to set up the library:
 ```bash
 bash install.sh
 ```
 
-### Development Installation (Symlink)
-
-For active development:
-
+For development use:
 ```bash
 bash install-symlink.sh
 ```
 
-## Building the Library
+### Basic Configuration
+Control logging behavior by setting the log level and format in your sketch:
+```cpp
+// Set log level
+#define LOG_LEVEL LOG_LEVEL_DATA
 
-Compile the example sketches with:
+// Set log format
+#define LOG_FORMAT LOG_FORMAT_MACHINE
 
-```bash
-bash build.sh
+#include "SerialLogger.h"
 ```
+
+### Running an Example
+1. Open one of the example sketches (e.g., `DataLogging.ino`) in the Arduino IDE.
+2. Upload it to your Arduino.
+3. View the output in the Serial Monitor.
+4. If using the `DataLogging` example, parse the output with the [stream_data.py script](docs/python-integration.md).
+
+---
 
 ## Examples
 
-The library includes the following example sketches:
+The library includes several examples to get you started:
+- **DataLogging**: Logs structured data for Python parsing. See the [Python Integration Guide](docs/python-integration.md) for details.
+- **DebugLogging**: Logs debug messages for troubleshooting.
+- **InfoLogging**: Logs essential information for production.
 
-- **`DebugLogging.ino`**: Logs debug, info, and data in human-readable format.
-- **`InfoLogging.ino`**: Logs only info and data, without debug messages.
-- **`DataLogging.ino`**: Logs data in a machine-readable format for structured output.
+Detailed descriptions are available in the [examples documentation](docs/examples.md).
 
-## Log Levels
+---
 
-You can control the verbosity of logs by setting the log level before including `SerialLogger.h`:
+## API Reference
 
-```cpp
-#define LOG_LEVEL LOG_LEVEL_DEBUG  // Logs everything: debug, info, data
-#define LOG_LEVEL LOG_LEVEL_INFO   // Logs only info and data, skips debug
-#define LOG_LEVEL LOG_LEVEL_DATA   // Logs only data
-#include "SerialLogger.h"
-```
+### Core Methods
+- `Logger.data(label, key, value)`: Logs a key-value pair.
+- `Logger.dataln()`: Ends the current log line.
+- `Logger.info(message)`: Logs an info-level message.
+- `Logger.debug(message)`: Logs a debug-level message.
+- `Logger.print(message)`: Directly outputs a message to the serial console.
+- `Logger.println(message)`: Outputs a message with a newline.
 
-### Example Usage:
+For more details, see the [Configuration Guide](docs/configuration.md).
 
-- **Debug Level**:
-  
-  ```cpp
-  Logger.debugln("This is a debug message.");
-  ```
+---
 
-- **Info Level**:
-  
-  ```cpp
-  Logger.infoln("System is running.");
-  ```
+## Next Steps
 
-- **Data Logging**:
-  
-  ```cpp
-  Logger.data("Temperature", "T", 25.4);
-  Logger.dataln();  // Finalize the data line
-  ```
+Explore the following resources for more details:
+- [Configuration Options](docs/configuration.md)
+- [Key-Value Pair Structure](docs/key-value-pairs.md)
+- [Python Integration](docs/python-integration.md)
+- [Examples](docs/examples.md)
+- [Installation and Development](docs/installation.md)
 
-## Log Formats
-
-You can choose between human-readable and machine-readable formats:
-
-```cpp
-#define LOG_FORMAT LOG_FORMAT_HUMAN   // Human-readable format
-#define LOG_FORMAT LOG_FORMAT_MACHINE // Machine-readable format
-#include "SerialLogger.h"
-```
-
-### Example Outputs:
-
-- **Human-readable**:
-  
-  ```c
-  Temperature: 25.40
-  Humidity: 60.10
-  ```
-
-- **Machine-readable**:
-  
-  ```c
-  D;T:25.40;H:60.10;
-  ```
-
-## Direct Printing
-
-The `print` and `println` methods allow direct output to `Serial`:
-
-```cpp
-Logger.print("Always enabled message.");
-Logger.println("This is directly printed to Serial.");
-```
-
-- **Note**: These calls are **not disableable**. For logs you want to control with log levels, use `info` or `debug`.
-
+---
 
 ## License
+
 [This project is licensed under the UltiBlox License.](https://ultiblox.org/license)
