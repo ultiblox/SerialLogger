@@ -1,38 +1,43 @@
-// Configure the log level
-//#define LOG_LEVEL LOG_LEVEL_DATA // DATA logging level
-//#define LOG_LEVEL LOG_LEVEL_INFO // INFO logging level
-#define LOG_LEVEL LOG_LEVEL_DEBUG // DEBUG logging level
+// Example: DebugLogging with Python Integration
+// Demonstrates debug messages and structured data logging.
 
-// Configure the log format
-#define LOG_FORMAT LOG_FORMAT_HUMAN // Human readable
-//#define LOG_FORMAT LOG_FORMAT_MACHINE // Machine readable
+#define LOG_LEVEL LOG_LEVEL_DEBUG // Enable debug logging
+#define LOG_FORMAT LOG_FORMAT_MACHINE // Use machine-readable format
 
 #include "SerialLogger.h"
 
 SerialLogger Logger;
 
-int loopNumber = 1;
+int loopCounter = 0;
 
 void setup() {
-    Logger.init(115200);
+    Logger.init(115200); // Initialize logger with baud rate
 
     Logger.debugln("[DEBUG] System starting...");
-
     Logger.infoln("[INFO] System initialized and running");
 
-    Logger.data("Temperature", "T", 25.4);
-    Logger.data("Humidity", "H", 60.2);
+    // Initial data logs
+    Logger.data("StartupMessage", "MSG", "Arduino Started");
     Logger.dataln();
 }
 
 void loop() {
-    Logger.debug("[DEBUG] Loop number: ");
-    Logger.debugln(loopNumber);
+    // Simulated sensor data
+    float temperature = random(20, 30) + random(0, 10) / 10.0;
+    float humidity = random(40, 60) + random(0, 10) / 10.0;
+    unsigned long timestamp = millis();
 
-    Logger.data("Temperature", "T", 24.8);
-    Logger.data("Humidity", "H", 58.7);
+    // Debugging log
+    Logger.debug("[DEBUG] Loop number: ");
+    Logger.debugln(loopCounter);
+
+    // Structured data logs
+    Logger.data("Temperature", "T", temperature);
+    Logger.data("Humidity", "H", humidity);
+    Logger.data("Timestamp", "TS", timestamp);
+    Logger.data("LoopCount", "LC", loopCounter);
     Logger.dataln();
 
-    delay(1000);
-    loopNumber++;
+    loopCounter++;
+    delay(1000); // Delay for 1 second
 }
