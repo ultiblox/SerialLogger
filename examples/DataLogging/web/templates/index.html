@@ -9,10 +9,22 @@
 <body>
     <div class="container">
         <h1>Data Logger</h1>
-        <div id="data-display">
-            <p id="T">Temperature: --</p>
-            <p id="H">Humidity: --</p>
-            <p id="L">Loop Count: --</p>
+        <div class="grid">
+            <!-- Temperature Card -->
+            <div class="card">
+                <h2>Temperature</h2>
+                <img id="temperatureGauge" src="/gauge/T" alt="Temperature Gauge">
+            </div>
+            <!-- Humidity Card -->
+            <div class="card">
+                <h2>Humidity</h2>
+                <img id="humidityGauge" src="/gauge/H" alt="Humidity Gauge">
+            </div>
+            <!-- Loop Count Card -->
+            <div class="card">
+                <h2>Loop Count</h2>
+                <p id="loopCount" class="counter">0</p>
+            </div>
         </div>
     </div>
     <script src="static/app.js"></script>

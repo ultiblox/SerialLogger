@@ -1,25 +1,44 @@
 body {
-    background: linear-gradient(180deg, #121212, #1e1e1e);
-    color: #ffffff;
-    font-family: Arial, sans-serif;
+    background: linear-gradient(180deg, #121212, #1e1e1e) no-repeat;
+    min-height: 100vh;
+    margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
+    font-family: Arial, sans-serif;
+    color: #ffffff;
 }
 
 .container {
+    width: 90%;
+    max-width: 800px;
+    padding: 20px;
     text-align: center;
 }
 
-h1 {
-    margin-bottom: 20px;
-    font-size: 2em;
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
 }
 
-#gauge {
-    max-width: 300px;
-    max-height: 300px;
-    margin: auto;
+.card {
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    color: #ffffff;
+}
+
+.card h2 {
+    margin-bottom: 20px;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
 }
