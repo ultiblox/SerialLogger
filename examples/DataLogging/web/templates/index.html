@@ -3,30 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/gauge.min.js"></script>
     <title>Data Logger</title>
-    <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Data Logger</h1>
         <div class="grid">
             <!-- Temperature Card -->
             <div class="card">
                 <h2>Temperature</h2>
-                <img id="temperatureGauge" src="/gauge/T" alt="Temperature Gauge">
+                <canvas id="temperatureGauge"></canvas>
+                <div class="value" id="temperatureValue">24.5 °C</div>
             </div>
             <!-- Humidity Card -->
             <div class="card">
                 <h2>Humidity</h2>
-                <img id="humidityGauge" src="/gauge/H" alt="Humidity Gauge">
+                <canvas id="humidityGauge"></canvas>
+                <div class="value" id="humidityValue">60.1 %</div>
             </div>
-            <!-- Loop Count Card -->
+            <!-- Loop Counter Card -->
             <div class="card">
                 <h2>Loop Count</h2>
-                <p id="loopCount" class="counter">0</p>
+                <div class="counter" id="loopCount">0</div>
             </div>
         </div>
     </div>
-    <script src="static/app.js"></script>
+    <script src="/static/app.js"></script>
 </body>
 </html>
