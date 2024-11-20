@@ -36,24 +36,43 @@ document.addEventListener("DOMContentLoaded", () => {
             // Update button state to show action in progress
             connectButton.textContent = action === "connect" ? "Connecting..." : "Disconnecting...";
             connectButton.disabled = true;
-
+    
             // Perform the action
             const url = action === "connect" ? "/connect" : "/disconnect";
             const method = "POST";
             const body = action === "connect" ? JSON.stringify({ port: portSelect.value }) : null;
             console.log(`Sending ${action} request to ${url} with body:`, body);
-
+    
             const response = await fetch(url, {
                 method,
                 headers: { "Content-Type": "application/json" },
                 body,
             });
             const result = await response.json();
-
+    
             console.log(`${action.charAt(0).toUpperCase() + action.slice(1)} response:`, result);
-
+    
             if (result.success) {
-                connectButton.textContent = action === "connect" ? "Disconnect" : "Connect";
+                if (action === "connect") {
+                    connectButton.textContent = "Disconnect";
+    
+                    // If "Auto" was used, update the dropdown to the detected port
+                    if (portSelect.value === "Auto" && result.port) {
+                        const detectedPort = result.port;
+                        console.log(`Detected port: ${detectedPort}`);
+                        portSelect.value = detectedPort;
+    
+                        // Add detected port to dropdown if it doesn't exist
+                        if (!Array.from(portSelect.options).some(option => option.value === detectedPort)) {
+                            const newOption = document.createElement("option");
+                            newOption.value = detectedPort;
+                            newOption.textContent = detectedPort;
+                            portSelect.appendChild(newOption);
+                        }
+                    }
+                } else {
+                    connectButton.textContent = "Connect";
+                }
             } else {
                 alert(`${action === "connect" ? "Connection" : "Disconnection"} failed: ${result.error}`);
                 connectButton.textContent = action === "connect" ? "Connect" : "Disconnect";

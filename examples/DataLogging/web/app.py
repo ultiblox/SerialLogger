@@ -46,13 +46,12 @@ def connect():
         logger_handler.setCallback(update_data)
         logger_handler.start()
 
-        # Debug connection state
         if logger_handler.is_listening:
             app.logger.info(f"Successfully connected to port: {port}")
+            return jsonify({"success": True, "port": port, "message": f"Connected to {port}"})
         else:
             app.logger.warning(f"Failed to start listening on port: {port}")
-
-        return jsonify({"success": True, "message": f"Connected to {port}"})
+            return jsonify({"success": False, "error": f"Failed to start listening on port: {port}"}), 500
     except Exception as e:
         app.logger.error(f"Connection error: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
