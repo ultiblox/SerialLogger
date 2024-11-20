@@ -72,9 +72,20 @@ def disconnect():
 # API: Get connection status
 @app.route("/status")
 def status():
-    status = "connected" if logger_handler.is_listening else "disconnected"
-    app.logger.debug(f"Connection status: {status}")
-    return jsonify({"status": status})
+    # Determine connection status
+    connection_status = "connected" if logger_handler.is_listening else "disconnected"
+
+    # Get the currently connected port, if any
+    current_port = logger_handler.port if logger_handler.is_listening else None
+
+    # Log the status for debugging
+    app.logger.debug(f"Connection status: {connection_status}, Port: {current_port}")
+
+    # Return the status and port
+    return jsonify({
+        "status": connection_status,
+        "port": current_port
+    })
 
 # API: Get latest data
 @app.route("/data")

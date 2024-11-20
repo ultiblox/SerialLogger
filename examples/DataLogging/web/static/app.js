@@ -72,6 +72,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 } else {
                     connectButton.textContent = "Connect";
+    
+                    // Reset all displayed values and gauges to default
+                    document.getElementById("temperatureValue").textContent = "0 °C";
+                    document.getElementById("humidityValue").textContent = "0 %";
+                    document.getElementById("loopCount").textContent = "0";
+    
+                    temperatureGauge.set(0); // Reset temperature gauge
+                    humidityGauge.set(0);    // Reset humidity gauge
                 }
             } else {
                 alert(`${action === "connect" ? "Connection" : "Disconnection"} failed: ${result.error}`);
@@ -84,6 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
             connectButton.disabled = false; // Re-enable the button
         }
     }
+    
 
     setInterval(async () => {
         try {
@@ -117,10 +126,25 @@ document.addEventListener("DOMContentLoaded", () => {
                 temperatureGauge.set(parseFloat(data.T) || 0);
                 humidityGauge.set(parseFloat(data.H) || 0);
     
+                // Ensure the button shows "Disconnect"
                 if (connectButton.textContent === "Connect") {
                     connectButton.textContent = "Disconnect";
                 }
+    
+                // Update dropdown to show the connected port
+                if (statusData.port) {
+                    portSelect.value = statusData.port;
+    
+                    // Add the connected port to the dropdown if it doesn't exist
+                    if (!Array.from(portSelect.options).some(option => option.value === statusData.port)) {
+                        const newOption = document.createElement("option");
+                        newOption.value = statusData.port;
+                        newOption.textContent = statusData.port;
+                        portSelect.appendChild(newOption);
+                    }
+                }
             } else {
+                // If disconnected, reset UI and button state
                 if (connectButton.textContent === "Disconnect") {
                     connectButton.textContent = "Connect";
                 }
@@ -128,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             console.error("Error checking status or fetching data:", error);
         }
-    }, 1000);
+    }, 1000);    
 
     // Initialize gauges function
     function initializeGauges() {
