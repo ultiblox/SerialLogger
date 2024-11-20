@@ -18,8 +18,12 @@ def handle_data_received(data):
 
 # Create and configure the logger handler
 logger_handler = SerialLoggerHandler(debug=False)
+
+# Either set the port manually...
 #logger_handler.setPort("/dev/ttyUSB0")
+# ...or auto detect the port...
 logger_handler.detectPort()
+
 logger_handler.setBaudRate(115200)
 logger_handler.setCallback(handle_data_received)
 
