@@ -29,31 +29,33 @@ class SerialLoggerHandler:
         """Set the serial port."""
         self.port = port
         print(f"Serial port: {self.port}")
-        
-    def detectPort(baud_rate=115200, timeout=1):
+
+    def detectPort(self):
         """
         Attempt to automatically detect the serial port used by the Arduino.
-        :param baud_rate: The baud rate to use for testing each port.
-        :param timeout: Timeout for reading data during detection.
-        :return: The name of the detected port, or None if no suitable port is found.
+        :return: The detected port name, or None if no suitable port is found.
         """
+        import time
+
         print("Detecting Arduino serial port...")
         available_ports = list_ports.comports()
         for port in available_ports:
             port_name = port.device
-            print(f"Testing port: {port_name}")
+            self.logger.debug(f"Testing port: {port_name}")
             try:
-                with serial.Serial(port_name, baud_rate, timeout=timeout) as test_serial:
-                    # Read a short burst of data
-                    line = test_serial.readline().decode("utf-8", errors="ignore").strip()
-                    if "D;" in line:  # Look for the marker
-                        print(f"Detected Arduino on port: {port_name}")
-                        return port_name
+                with serial.Serial(port_name, self.baud_rate, timeout=self.timeout) as test_serial:
+                    for _ in range(5):  # Try reading multiple lines
+                        line = test_serial.readline().decode("utf-8", errors="ignore").strip()
+                        self.logger.debug(f"Read line: {line}")
+                        if "D;" in line:  # Look for the marker
+                            print(f"Detected Arduino on port: {port_name}")
+                            self.port = port_name
+                            return port_name
+                        time.sleep(0.1)  # Allow some delay for data to arrive
             except (serial.SerialException, OSError) as e:
-                print(f"Could not open port {port_name}: {e}")
+                self.logger.debug(f"Could not open port {port_name}: {e}")
         print("No Arduino detected.")
         return None
-
 
     def setBaudRate(self, baud_rate):
         """Set the baud rate."""
