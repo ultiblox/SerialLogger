@@ -1,10 +1,13 @@
 #!/bin/bash
 
-# Set the system-wide installation directory
+# Exit on error
+set -e
+
+# Set the system-wide installation directory for Arduino CLI
 BINDIR="/usr/local/bin"
 CLI_VERSION="latest"  # Change to a specific version if needed
 
-# Check if arduino-cli is already installed
+# Check if Arduino CLI is already installed
 if command -v arduino-cli &> /dev/null; then
     echo "Arduino CLI is already installed."
 else
@@ -22,5 +25,15 @@ else
     fi
 fi
 
-# Verify the installation
+# Verify the Arduino CLI installation
 arduino-cli version
+
+# Install Python dependencies
+echo "Updating pip..."
+pip install --upgrade pip
+
+echo "Installing SerialLoggerHandler module..."
+pip install git+ssh://git@github.com/ultiblox/SerialLoggerHandler.git
+
+echo "Setup complete. The environment is ready!"
+

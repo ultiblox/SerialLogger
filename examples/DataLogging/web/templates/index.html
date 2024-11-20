@@ -3,32 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serial Logger</title>
     <link rel="stylesheet" href="/static/style.css">
     <script src="/static/gauge.min.js"></script>
-    <title>Data Logger</title>
+    <script src="/static/app.js"></script>
 </head>
 <body>
     <div class="container">
+        <div class="controls">
+            <label for="portSelect">Port:</label>
+            <select id="portSelect">
+                <option value="Auto">Auto</option>
+            </select>
+            <button id="connectButton">Connect</button>
+        </div>
+
         <div class="grid">
             <!-- Temperature Card -->
             <div class="card">
-                <h2>Temperature</h2>
+                <h3>Temperature</h3>
                 <canvas id="temperatureGauge"></canvas>
-                <div class="value" id="temperatureValue">24.5 °C</div>
+                <div class="value" id="temperatureValue">0 °C</div>
             </div>
             <!-- Humidity Card -->
             <div class="card">
-                <h2>Humidity</h2>
+                <h3>Humidity</h3>
                 <canvas id="humidityGauge"></canvas>
-                <div class="value" id="humidityValue">60.1 %</div>
+                <div class="value" id="humidityValue">0 %</div>
             </div>
             <!-- Loop Counter Card -->
             <div class="card">
-                <h2>Loop Count</h2>
-                <div class="counter" id="loopCount">0</div>
+                <h3>Loop Count</h3>
+                <div id="loopCount">0</div>
             </div>
         </div>
     </div>
-    <script src="/static/app.js"></script>
 </body>
 </html>
