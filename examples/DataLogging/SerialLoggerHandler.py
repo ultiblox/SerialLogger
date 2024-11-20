@@ -1,6 +1,7 @@
 import serial
 import threading
 import logging
+from serial.tools import list_ports
 
 class SerialLoggerHandler:
     def __init__(self, port="/dev/ttyUSB0", baud_rate=115200, timeout=1, debug=False):
@@ -28,6 +29,31 @@ class SerialLoggerHandler:
         """Set the serial port."""
         self.port = port
         print(f"Serial port: {self.port}")
+        
+    def detectPort(baud_rate=115200, timeout=1):
+        """
+        Attempt to automatically detect the serial port used by the Arduino.
+        :param baud_rate: The baud rate to use for testing each port.
+        :param timeout: Timeout for reading data during detection.
+        :return: The name of the detected port, or None if no suitable port is found.
+        """
+        print("Detecting Arduino serial port...")
+        available_ports = list_ports.comports()
+        for port in available_ports:
+            port_name = port.device
+            print(f"Testing port: {port_name}")
+            try:
+                with serial.Serial(port_name, baud_rate, timeout=timeout) as test_serial:
+                    # Read a short burst of data
+                    line = test_serial.readline().decode("utf-8", errors="ignore").strip()
+                    if "D;" in line:  # Look for the marker
+                        print(f"Detected Arduino on port: {port_name}")
+                        return port_name
+            except (serial.SerialException, OSError) as e:
+                print(f"Could not open port {port_name}: {e}")
+        print("No Arduino detected.")
+        return None
+
 
     def setBaudRate(self, baud_rate):
         """Set the baud rate."""
@@ -81,8 +107,6 @@ class SerialLoggerHandler:
         finally:
             self.serial_connection = None
             print("Stopped listening.")
-
-
 
 
     def start(self):
