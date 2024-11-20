@@ -1,0 +1,25 @@
+body {
+    background: linear-gradient(180deg, #121212, #1e1e1e);
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+    font-size: 2em;
+}
+
+#gauge {
+    max-width: 300px;
+    max-height: 300px;
+    margin: auto;
+}
