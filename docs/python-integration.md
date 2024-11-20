@@ -24,7 +24,7 @@ The `stream_data.py` script is designed to parse and process data from your Ardu
 ### Run the Script
 
 1. Connect your Arduino to your computer via USB.
-2. Get the [stream_data.py](../examples/DataLogging/stream_data.py) script
+2. Copy the [stream_data.py](../examples/DataLogging/stream_data.py) script to a folder of your choice
 3. Run the Python script:
    ```bash
    python3 stream_data.py
