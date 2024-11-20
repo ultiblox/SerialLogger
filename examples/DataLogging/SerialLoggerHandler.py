@@ -6,6 +6,10 @@ class SerialLoggerHandler:
     def __init__(self, port="/dev/ttyUSB0", baud_rate=115200, timeout=1, debug=False):
         """
         Initialize the SerialLoggerHandler with default configuration.
+        :param port: Serial port (e.g., "/dev/ttyUSB0").
+        :param baud_rate: Baud rate for the connection.
+        :param timeout: Timeout for serial reads (default: 1 second).
+        :param debug: Enable detailed debug logging.
         """
         self.port = port
         self.baud_rate = baud_rate
@@ -16,52 +20,54 @@ class SerialLoggerHandler:
         self.debug = debug
 
         # Configure logging
-        logging.basicConfig(level=logging.DEBUG if self.debug else logging.INFO)
+        log_level = logging.DEBUG if self.debug else logging.CRITICAL
+        logging.basicConfig(level=log_level)
         self.logger = logging.getLogger("SerialLoggerHandler")
 
     def setPort(self, port):
+        """Set the serial port."""
         self.port = port
-        self.logger.info(f"Serial port set to: {self.port}")
+        print(f"Serial port: {self.port}")
 
     def setBaudRate(self, baud_rate):
+        """Set the baud rate."""
         self.baud_rate = baud_rate
-        self.logger.info(f"Baud rate set to: {self.baud_rate}")
+        print(f"Baud rate: {self.baud_rate}")
 
     def setCallback(self, callback):
+        """Set the callback function to process data."""
         if not callable(callback):
             raise ValueError("Callback must be a callable function.")
         self.data_handler = callback
-        self.logger.info("Callback function set successfully.")
 
     def _default_parse_data_line(self, line):
+        """
+        Parse a single line of serial data into key-value pairs.
+        Processes lines containing "D;" and ignores the rest.
+        """
         parsed_data = {}
-        if line.startswith("D;"):
-            kv_pairs = line[2:].strip().split(";")
+        start_index = line.find("D;")  # Locate the "D;" marker
+        if start_index != -1:
+            kv_pairs = line[start_index + 2:].strip().split(";")  # Strip prefix and split pairs
             for pair in kv_pairs:
-                if ":" in pair:
+                if ":" in pair:  # Ensure key-value format
                     key, value = pair.split(":", 1)
                     parsed_data[key] = value
         return parsed_data
 
     def _listen_for_serial_data(self):
-        self.logger.info(f"Attempting to open serial connection on {self.port}.")
+        self.logger.debug(f"Listening on {self.port} at {self.baud_rate} baud.\n")  # Added spacing here
         try:
             with serial.Serial(self.port, self.baud_rate, timeout=self.timeout) as serial_conn:
                 self.serial_connection = serial_conn
-                if not serial_conn.is_open:
-                    self.logger.error("Failed to open serial connection.")
-                    return
-
-                self.logger.info(f"Listening on {self.port} at {self.baud_rate} baud.")
                 while self.is_listening:
                     try:
                         line = serial_conn.readline().decode("utf-8", errors="ignore").strip()
                         self.logger.debug(f"Raw data received: {line or '<empty>'}")
                         if not line:
-                            continue  # Skip empty lines
+                            continue
                         parsed_data = self._default_parse_data_line(line)
                         if parsed_data:
-                            self.logger.debug(f"Parsed data: {parsed_data}")
                             if self.data_handler:
                                 self.data_handler(parsed_data)
                             else:
@@ -74,11 +80,15 @@ class SerialLoggerHandler:
             self.logger.error(f"Unexpected error: {e}")
         finally:
             self.serial_connection = None
-            self.logger.info("Stopped listening.")
+            print("Stopped listening.")
+
+
+
 
     def start(self):
+        """Start listening for data."""
         if self.is_listening:
-            self.logger.warning("SerialLoggerHandler is already running.")
+            print("SerialLoggerHandler is already running.")
             return
 
         if not self.data_handler:
@@ -86,14 +96,15 @@ class SerialLoggerHandler:
 
         self.is_listening = True
         threading.Thread(target=self._listen_for_serial_data, daemon=True).start()
-        self.logger.info("SerialLoggerHandler started.")
+        self.logger.debug("SerialLoggerHandler started.")
 
     def stop(self):
+        """Stop listening for serial data."""
         if not self.is_listening:
-            self.logger.warning("SerialLoggerHandler is not running.")
+            print("SerialLoggerHandler is not running.")
             return
 
         self.is_listening = False
         if self.serial_connection:
             self.serial_connection.close()
-        self.logger.info("SerialLoggerHandler has stopped.")
+        self.logger.debug("SerialLoggerHandler has stopped.")
