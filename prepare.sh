@@ -33,7 +33,7 @@ echo "Updating pip..."
 pip install --upgrade pip
 
 echo "Installing SerialLoggerHandler module..."
-pip install git+ssh://git@github.com/ultiblox/SerialLoggerHandler.git
+pip install git+https://github.com/ultiblox/SerialLoggerHandler.git
 
 echo "Setup complete. The environment is ready!"
 
