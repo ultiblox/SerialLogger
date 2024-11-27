@@ -5,7 +5,7 @@ LIBRARY_PATH="$PWD"
 
 # Define the target path where the symlink will be created
 # This should be in a 'libraries' directory if adhering to Arduino project structure
-TARGET_PATH="/home/$USER/Arduino/libraries/SerialLogger"
+TARGET_PATH="/home/$USER/Arduino/libraries/UltiBlox-SerialLogger"
 
 # Ensure the target directory exists
 mkdir -p $(dirname "${TARGET_PATH}")
